@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class ItemModel {
   final int id;
   final bool deleted;
@@ -13,21 +15,67 @@ class ItemModel {
   final String title;
   final int descendants;
 
-  ItemModel(this.id,this.deleted,this.type,this.by,this.time,this.text,this.dead,this.parent,this.url,this.score,this.title,this.kids,this.descendants);
-  ItemModel.fromJson(Map<String,dynamic> parsedJson)
-  : 
-  id= parsedJson['id'],
-  deleted= parsedJson["deleted"],
-  type= parsedJson["type"],
-  by= parsedJson["by"],
-  time= parsedJson["time"],
-  text= parsedJson["text"],
-  dead= parsedJson["dead"],
-  parent= parsedJson["parent"],
-  kids= parsedJson["kids"],
-  url= parsedJson["url"],
-  score= parsedJson["score"],
-  title= parsedJson["title"],
-  descendants= parsedJson["descendants"];
-    
+  ItemModel(
+      this.id,
+      this.deleted,
+      this.type,
+      this.by,
+      this.time,
+      this.text,
+      this.dead,
+      this.parent,
+      this.url,
+      this.score,
+      this.title,
+      this.kids,
+      this.descendants);
+  ItemModel.fromJson(Map<String, dynamic> parsedJson)
+      : id = parsedJson['id'],
+        deleted = parsedJson["deleted"],
+        type = parsedJson["type"],
+        by = parsedJson["by"],
+        time = parsedJson["time"],
+        text = parsedJson["text"],
+        dead = parsedJson["dead"],
+        parent = parsedJson["parent"],
+        kids = parsedJson["kids"],
+        url = parsedJson["url"],
+        score = parsedJson["score"],
+        title = parsedJson["title"],
+        descendants = parsedJson["descendants"];
+
+  ItemModel.fromDb(Map<String, dynamic> parsedJson)
+      : id = parsedJson["id"],
+        /*the trick below for Bolean datatypes  */
+        deleted = parsedJson["deleted"] == 1,
+        type = parsedJson["type"],
+        by = parsedJson["by"],
+        time = parsedJson["time"],
+        text = parsedJson["text"],
+        dead = parsedJson["dead"] == 1,
+        parent = parsedJson["parent"],
+        /*jsonDecode is essiantially decode yr List<String> the format returned from th db into List<int>*/
+        kids = jsonDecode(parsedJson["kids"]),
+        url = parsedJson["url"],
+        score = parsedJson["score"],
+        title = parsedJson["title"],
+        descendants = parsedJson["descendants"];
+
+  Map<String, dynamic> toMap() {
+   return <String,dynamic>{
+      "id" : id,
+      "deleted" : deleted?1:0,
+      "type": type,
+      "by": by,
+      "time": time,
+      "text": text,
+      "dead": dead?1:0,
+      "parent": parent,
+      "url": url,
+      "score": score,
+      "title": title,
+      "kids": jsonEncode(kids),
+      "descendants": descendants,
+  };
+ }
 }
