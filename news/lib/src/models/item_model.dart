@@ -15,67 +15,53 @@ class ItemModel {
   final String title;
   final int descendants;
 
-  ItemModel(
-      this.id,
-      this.deleted,
-      this.type,
-      this.by,
-      this.time,
-      this.text,
-      this.dead,
-      this.parent,
-      this.url,
-      this.score,
-      this.title,
-      this.kids,
-      this.descendants);
-  ItemModel.fromJson(Map<String, dynamic> parsedJson)
-      : id = parsedJson['id'],
-        deleted = parsedJson["deleted"],
-        type = parsedJson["type"],
-        by = parsedJson["by"],
-        time = parsedJson["time"],
-        text = parsedJson["text"],
-        dead = parsedJson["dead"],
-        parent = parsedJson["parent"],
-        kids = parsedJson["kids"],
-        url = parsedJson["url"],
-        score = parsedJson["score"],
-        title = parsedJson["title"],
-        descendants = parsedJson["descendants"];
+  ItemModel.fromJson(fromJson)
+      : id = fromJson['id'],
+        deleted = fromJson['deleted'] ?? false,
+        type = fromJson['type'],
+        by = fromJson['by'] ?? '',
+        time = fromJson['time'],
+        text = fromJson['text'] ?? '',
+        dead = fromJson['dead'] ?? false,
+        parent = fromJson['parent'],
+        kids = fromJson['kids'] == null ? []: fromJson['kids'],
+        url = fromJson['url'],
+        score = fromJson['score'],
+        title = fromJson['title'],
+        descendants = fromJson['descendants'];
 
-  ItemModel.fromDb(Map<String, dynamic> parsedJson)
-      : id = parsedJson["id"],
-        /*the trick below for Bolean datatypes  */
-        deleted = parsedJson["deleted"] == 1,
-        type = parsedJson["type"],
-        by = parsedJson["by"],
-        time = parsedJson["time"],
-        text = parsedJson["text"],
-        dead = parsedJson["dead"] == 1,
-        parent = parsedJson["parent"],
-        /*jsonDecode is essiantially decode yr List<String> the format returned from th db into List<int>*/
-        kids = jsonDecode(parsedJson["kids"]),
-        url = parsedJson["url"],
-        score = parsedJson["score"],
-        title = parsedJson["title"],
-        descendants = parsedJson["descendants"];
-
-  Map<String, dynamic> toMap() {
-   return <String,dynamic>{
-      "id" : id,
-      "deleted" : deleted?1:0,
+  ItemModel.fromDb(fromDb)
+      : id = fromDb['id'],
+        deleted = fromDb['deleted'] == 1,
+        type = fromDb['type'],
+        by = fromDb['by'],
+        time = fromDb['time'],
+        text = fromDb['text'],
+        dead = fromDb['dead'] == 1,
+        parent = fromDb['parent'],
+        kids = json.decode(fromDb['kids']),
+        url = fromDb['url'],
+        score = fromDb['score'],
+        title = fromDb['title'],
+        descendants = fromDb['descendants'];
+  
+  Map<String, dynamic> toMapForDb(){
+    return {
+      "id": id,
       "type": type,
       "by": by,
       "time": time,
       "text": text,
-      "dead": dead?1:0,
       "parent": parent,
       "url": url,
       "score": score,
       "title": title,
-      "kids": jsonEncode(kids),
       "descendants": descendants,
-  };
- }
+      "deleted": deleted ?? 0,
+      "dead": dead ?? 0,
+      "kids": json.encode(kids)
+    };
+    
+  }
+
 }
