@@ -1,3 +1,4 @@
+import 'package:MyPlace/widgets/image_input.dart';
 import 'package:flutter/material.dart';
 
 class AddPlacesScreen extends StatefulWidget {
@@ -9,6 +10,7 @@ class AddPlacesScreen extends StatefulWidget {
 }
 
 class _AddPlacesScreenState extends State<AddPlacesScreen> {
+  final _textController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,11 +21,23 @@ class _AddPlacesScreenState extends State<AddPlacesScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text('User Inputs fields'),
+          Expanded(
+              child: Column(
+            children: [
+              TextField(
+                decoration: InputDecoration(labelText: 'Title'),
+                controller: _textController,
+              ),
+              SizedBox(height: 10),
+              ImageInput(),
+            ],
+          )),
           RaisedButton.icon(
-            onPressed: null,
+            onPressed: () {},
             icon: Icon(Icons.add),
             label: Text('Submit'),
+            color: Theme.of(context).accentColor,
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
         ],
       ),
