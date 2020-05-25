@@ -1,4 +1,4 @@
-class Recipe {
+cdclass Recipe {
   final String spoonacularSourceUrl;
   // Equipment
   // Ingredients
